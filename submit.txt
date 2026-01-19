@@ -1,1 +1,2 @@
+/
 Deployment link will be added after building and deploying to Vercel/Netlify
