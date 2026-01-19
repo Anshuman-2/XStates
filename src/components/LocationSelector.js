@@ -10,11 +10,20 @@ const LocationSelector = () => {
   const [selectedState, setSelectedState] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
 
+  const [error, setError] = useState(null);
+
   // Fetch countries on mount
   useEffect(() => {
     fetch('https://location-selector.labs.crio.do/countries')
       .then(res => res.json())
-      .then(data => setCountries(data));
+      .then(data => {
+        setCountries(data);
+        setError(null);
+      })
+      .catch(err => {
+        console.error('Error fetching countries:', err);
+        setError('Failed to load countries');
+      });
   }, []);
 
   // Fetch states when country changes
@@ -27,6 +36,11 @@ const LocationSelector = () => {
           setSelectedState('');
           setCities([]);
           setSelectedCity('');
+          setError(null);
+        })
+        .catch(err => {
+          console.error('Error fetching states:', err);
+          setError('Failed to load states');
         });
     }
   }, [selectedCountry]);
@@ -39,6 +53,11 @@ const LocationSelector = () => {
         .then(data => {
           setCities(data);
           setSelectedCity('');
+          setError(null);
+        })
+        .catch(err => {
+          console.error('Error fetching cities:', err);
+          setError('Failed to load cities');
         });
     }
   }, [selectedCountry, selectedState]);
@@ -46,6 +65,8 @@ const LocationSelector = () => {
   return (
     <div className="location-selector">
       <h1>Location Selector</h1>
+
+      {error && <div className="error-message">{error}</div>}
 
       <div className="dropdown-container">
         <div className="dropdown-group">
